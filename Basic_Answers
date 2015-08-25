@@ -1,0 +1,93 @@
+Question 2
+
+~/qbb2015/day1/ mkdir QC_output
+~/qbb2015/day1 $ cd QC_output/
+~/qbb2015/day1 $ fastqc -o ~/qbb2015/day1/QC_output/ --extract -f fastq SRR072893.fastq
+~/qbb2015/day1/ $ cd QC_output/
+~/qbb2015/day1/QC_output $ ls -lh
+	#see that there are two files (SRR072893_fastqc.html, SRR072893_fastqc.zip) and one directory 	(SRR072893_fastqc)
+~/qbb2015/day1/QC_output $ cd SRR072893_fastqc
+~/qbb2015/day1/QC_output/SRR072893_fastqc $ ls -lh
+	#see that there are two directories (Icons, Images) and 4 files (fastqc.fo, fastqc_data.txt, 	fastqc_report.html, and summary.txt)
+~/qbb2015/day1/QC_output/SRR072893_fastqc $ open summary.txt
+
+PASS	Basic Statistics			SRR072893.fastq
+PASS	Per base sequence quality	SRR072893.fastq
+FAIL	Per tile sequence quality	SRR072893.fastq
+PASS	Per sequence quality scores	SRR072893.fastq
+FAIL	Per base sequence content	SRR072893.fastq
+FAIL	Per sequence GC content		SRR072893.fastq
+PASS	Per base N content			SRR072893.fastq
+PASS	Sequence Length DistributionSRR072893.fastq
+WARN	Sequence Duplication Levels	SRR072893.fastq
+FAIL	Overrepresented sequences	SRR072893.fastq
+WARN	Adapter Content				SRR072893.fastq
+FAIL	Kmer Content				SRR072893.fastq
+
+Question 3
+
+	#my indicies are in ~/qbb2015/genomes
+	
+~/qbb2015/genomes $ cd ~/qbb2015/day1
+~/qbb2015/day1 $ cp ./SRR072893.fastq ~/qbb2015/genomes/
+~/qbb2015/day1 $ cd ~/qbb2015/genomes/
+~/qbb2015/genomes $ ls -lh
+	#there are many files in here including my BDGP6 indicies and the SRR072893.fastq directory
+~/qbb2015/genomes $ hisat -p 4 -x ./BDGP6 -U ~/qbb2015/rawdata/SRR072893.fastq.gz -S SRR072893.sam
+	#I didn't see until later that you wanted us to do all of this in the ~/qbb2015/day1 directory, 	sorry!
+	#this didn't work until I used the raw data that was .fastq.gz - when I just used 	./SRR072893.fasta, it always threw an error
+	
+21892898 reads; of these:
+  21892898 (100.00%) were unpaired; of these:
+    4868452 (22.24%) aligned 0 times
+    16824102 (76.85%) aligned exactly 1 time
+    200344 (0.92%) aligned >1 times
+77.76% overall alignment rate
+
+Question 4
+
+~/qbb2015/genomes $ ls -lh
+	#see that SRR072893.sam is in this directory
+~/qbb2015/genomes $ samtools view -bS SRR072893.sam | samtools sort - SRR072893_sorted
+~/qbb2015/genomes $ ls -lh
+	#see that SRR072893_sorted.0000.bam is in the directory 
+	#I actually did this a few times without realizing it worked so I think that's why the 0000 is 	there
+~/qbb2015/genomes $ head ./SRR072893_sorted.0000.bam
+	#looks like BAM? It really just looks like a bunch of gibberish (hence the repeating the code a 	few times) but I think that's correct?
+~/qbb2015/genomes $ samtools sort -o indexed.bam -T SRR072893_indexed.0000.bam -@ 4 SRR072893_sorted.0000.bam
+~/qbb2015/genomes $ head ./SRR072893_sorted.0000.bam.bai
+
+Question 5
+
+~/qbb2015/genomes $ stringtie ~/qbb2015/genomes/SRR072893_sorted.0000.bam -p 4
+	#output looks like this:
+2L	StringTie	transcript	11032	15714	1000	-	.	gene_id "STRG.1"; transcript_id "STRG.1.1"; cov "3.283051"; FPKM "27.901958";
+2L	StringTie	exon	11032	11344	1000	-	.	gene_id "STRG.1"; transcript_id "STRG.1.1"; exon_number "1"; cov "0.464657";
+2L	StringTie	exon	11410	11518	1000	-	.	gene_id "STRG.1"; transcript_id "STRG.1.1"; exon_number "2"; cov "0.834862";
+2L	StringTie	exon	11779	12221	1000	-	.	gene_id "STRG.1"; transcript_id "STRG.1.1"; exon_number "3"; cov "1.956969";
+2L	StringTie	exon	12286	12928	1000	-	.	gene_id "STRG.1"; transcript_id "STRG.1.1"; exon_number "4"; cov "4.669875";
+2L	StringTie	exon	13520	13625	1000	-	.	gene_id "STRG.1"; transcript_id "STRG.1.1"; exon_number "5"; cov "4.788129";
+2L	StringTie	exon	13683	14874	1000	-	.	gene_id "STRG.1"; transcript_id "STRG.1.1"; exon_number "6"; cov "3.557641";
+2L	StringTie	exon	14933	15714	1000	-	.	gene_id "STRG.1"; transcript_id "STRG.1.1"; exon_number "7"; cov "3.740707";
+	#Unsure what the reference sequence in .gtf would be?? Because of that, I'm not including -e, -G, or -B in the code
+~/qbb2015/genomes $ stringtie ~/qbb2015/genomes/SRR072893_sorted.0000.bam -p 4 -o ./output_10.gtf
+	#Now I have a file for output_10.gtf but I'm not sure how to open it??
+	
+Question 6 - DEBUGGING
+
+~ $ fastqc -o ~/qbb2015/assignments//day1-homework/ --extract -f fastq ~/qbb2015/rawdata/SRR072893.fastq.gz 
+	Started analysis of SRR072893.fastq.gz
+	...
+	Approx 95% complete for SRR072893.fastq.gz
+	Analysis complete for SRR072893.fastq.gz
+	
+	
+
+
+
+
+
+	
+
+
+
