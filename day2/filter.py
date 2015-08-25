@@ -4,16 +4,22 @@ filename = "/Users/cmdb/qbb2015/stringtie/SRR072893/t_data.ctab"
 
 f = open ( filename )
 
-    #The comma after print line, here tells you to skip the next line. The default is that it will enter      a new (blank) line after the line it prints
+name_counts={}
+#Make a blank dictionary called name_counts
 
 
-#Iterate the file line by line with line_count=0
+
 
 for line_count, data in enumerate (f):
-    if line_count <= 10:
-        pass
-    elif line_count <= 15:
-        print data,
+    fields = data.split()
+    gene_name=fields[9]
+    if gene_name not in name_counts:
+        name_counts[gene_name] = 1
     else:
-        break    
+        name_counts[gene_name] += 1
+        
+#Iterate key, value pairs from the name counts dictionary
+for key,value in name_counts.iteritems():
+    print key,value
     
+#The reason we would even be finding multiple numbers of different genes is that there are different transcripts for the same gene
