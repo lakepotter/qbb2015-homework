@@ -40,7 +40,10 @@ plt.plot(Sxl_f, '-r')
 plt.plot(Sxl_m, '-b')
 plt.legend(['female', 'male'], loc='center left')
 plt.xlabel('developmental stage')
+plt.ylabel('mRNA abundance (RPKM)')
+y_ticks=[0, 50, 100, 150, 200, 250, 300]
 x_ticks=['10', '11', '12', '13', '14A', '14B', '14C', '14D']
 plt.xticks( range(8), x_ticks)
+plt.yticks( range(0,301,50), y_ticks)
 plt.title('Sxl')
 plt.savefig("timecourse_F_M.png")
