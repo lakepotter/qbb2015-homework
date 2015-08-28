@@ -27,7 +27,8 @@ class ChromosomeLocationBitArrays( object ):
             end = int( fields[2] )
             self.arrays[ chrom ][ start : end ] = 1
     #
-    # def make_bed_file (self):
+    #this was my code idea: 
+    #def make_bed_file (self):
     #     rval=[]
     #     for chrom in self.arrays:
     #         count = 0
@@ -38,6 +39,7 @@ class ChromosomeLocationBitArrays( object ):
     #                 end = count
     #             return self.arrays["chrom", "start", "end"]
                 
+      #code generated from study group... mostly ignore..
     def make_bed_file (self):
         rval = []
         for chrom in self.arrays:
@@ -47,6 +49,7 @@ class ChromosomeLocationBitArrays( object ):
             for index in self.arrays[chrom]:
                 counter += 1
                 if counter%1000000 == 0:
+                #so, for every million counts, it will print (because if the counter / 100000 = 0 if will print)
                     print counter
                 elif index == 1:
                     if not readingBool:
@@ -58,7 +61,19 @@ class ChromosomeLocationBitArrays( object ):
                         readingBool = False
                         counter =+ 1
         return rval
-            
+        
+ #this is mindy's code - i really like it       
+    def create_intervals ( self):
+        regions = []
+        for chrom in self.arrays:
+            row = self.arrays[chrom]
+            for i, x in enumerate(row):
+                if x == 1 and row[i-1]==0:
+                    start = i
+                if x == 0 and row[i-1]==1:
+                    stop = i    
+                    regions.append((chrom, start, stop))
+        return regions
 
         
     def intersect( self, other ):
