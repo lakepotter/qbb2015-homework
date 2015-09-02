@@ -1,5 +1,8 @@
+from __future__ import division
+import sys
 import numpy
 import copy
+
 
 class ChromosomeLocationBitArrays( object ):
 
@@ -26,55 +29,6 @@ class ChromosomeLocationBitArrays( object ):
             start = int( fields[1] )
             end = int( fields[2] )
             self.arrays[ chrom ][ start : end ] = 1
-    #
-    #this was my code idea: 
-    #def make_bed_file (self):
-    #     rval=[]
-    #     for chrom in self.arrays:
-    #         count = 0
-    #         for x in self.arrays[chrom]:
-    #             if x == 1 and x-1 == 0:
-    #                 start = count
-    #             if x == 0 and x-1 == 1:
-    #                 end = count
-    #             return self.arrays["chrom", "start", "end"]
-                
-      #code generated from study group... mostly ignore..
-    def make_bed_file (self):
-        rval = []
-        for chrom in self.arrays:
-            startPosition = 0
-            readingBool = False
-            counter = 0
-            for index in self.arrays[chrom]:
-                counter += 1
-                if counter%1000000 == 0:
-                #so, for every million counts, it will print (because if the counter / 100000 = 0 if will print)
-                    print counter
-                elif index == 1:
-                    if not readingBool:
-                        startPosition = counter
-                        readingBool = True
-                elif index == 0:
-                    if readingBool == True:
-                        rval.append((chrom, startPosition, counter-1))
-                        readingBool = False
-                        counter =+ 1
-        return rval
-        
- #this is mindy's code - i really like it       
-    def create_intervals ( self):
-        regions = []
-        for chrom in self.arrays:
-            row = self.arrays[chrom]
-            for i, x in enumerate(row):
-                if x == 1 and row[i-1]==0:
-                    start = i
-                if x == 0 and row[i-1]==1:
-                    stop = i    
-                    regions.append((chrom, start, stop))
-        return regions
-
         
     def intersect( self, other ):
         rval = {}
@@ -97,3 +51,17 @@ class ChromosomeLocationBitArrays( object ):
     def copy( self ):
         return ChromosomeLocationBitArrays( 
             dicts=copy.deepcopy( self.arrays ) )
+            
+    def make_bed_file (self):
+        bed_file=[]
+        for chrom in self.arrays:
+            count = 0
+            array=self.arrays[chrom]
+            for i, x in enumerate(array):
+                if x == 1 and x-1 == 0:
+                    start = i
+                if x == 0 and x-1 == 1:
+                    end = i -1
+                    bed_file.append((chrom, start, end))
+        return bed_file
+        print bed_file
