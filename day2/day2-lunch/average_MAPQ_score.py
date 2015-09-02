@@ -1,25 +1,28 @@
 #!/usr/bin/env python
 
 
-filename = "/Users/cmdb/qbb2015-homework/day2/day2-lunch/SRR072893.sam"
+filename = "/Users/cmdb/qbb2015/genomes/SRR072893_2.sam"
 
 f = open (filename)
 
 #average MAPQ score - get all the MAPQ scores divided by the total number of counts
 
-MAPQ = 0
+
 count = 0
+total_MAPQ = 0
 
 for lines in f:
-    columns = lines.split()
-    #print columns[0:5] - this seems to be working...
-    MAPQ_value = columns[4]
-    if "@" == columns[0]:
+    
+    if "@" in lines:
         #to avoid the header
         pass
+    
     else:
-        MAPQ += int(MAPQ_value)
         count += 1
+        column = lines.split()
+        MAPQ = column[4]
+        MAPQ = int(MAPQ)
+        total_MAPQ += MAPQ
 
-
-print MAPQ/count
+average = total_MAPQ/count
+print average
