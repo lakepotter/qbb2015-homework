@@ -22,31 +22,30 @@ sortedplotdata=plotdata.sort("FPKM")
 
 #index = location within an object -- maybe?
 
-print sortedplotdata
+#print sortedplotdata
 
 top = sortedplotdata[0:3183]
 middle= sortedplotdata[3183:6366]
 bottom=sortedplotdata[6366:9548]
 
-print top
-print middle
-print bottom
+#could do len() / 3 instead of hard coding 
 
-top.boxplot()
+top=top['FPKM']
+middle=middle['FPKM']
+bottom=bottom['FPKM']
 
-topplot=top.boxplot(return_type='both')
-middleplot=middle.boxplot(return_type='both')
-bottomplot=bottom.boxplot(return_type='both')
 
 plt.figure()
-plt.title("Top third FPKM values")
-#plt.plot('both')
-#plt.xlabel("X")
-#plt.ylabel("Y")
-plt.savefig("top third FPKM values.png")
+plt.title("FPKM boxplot")
+plt.boxplot([top,middle,bottom])
+plt.xlabel("Gene Number")
+plt.ylabel("Start Position")
+plt.savefig("FPKM_boxplot.png")
+
+#could put this on a log axis so that it spreads out a bit more
 
 
-#I'm having a hard time putting my returned values for .boxplot into plt.boxplot()
+
 
 
 
