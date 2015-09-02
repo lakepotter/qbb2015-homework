@@ -10,6 +10,7 @@ line_count = 0
 for lines in f:
     columns = lines.split()
     if "@" in lines:
+        #to avoid the header
         pass
     else:
         if line_count <= 10:
